@@ -1,36 +1,36 @@
-PROJECT = 01
-SYSTEM = linux
-SRCDIR = src
-BINDIR = bin
-LIBDIR = lib
-INCDIR = include
-CC = g++ -std=c++17
+#
+# TODO: Move `libmongoclient.a` to /usr/local/lib so this can work on production servers
+#
+ 
+CC := g++ -std=c++17
 
+SRCDIR := src
+BUILDDIR := build
+TARGET := bin/runner
+ 
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS := -g # -Wall
+LIB := -pthread
+INC := -I include
 
-all: main.o filehandler.o request_builder.o server.o server 
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(BUILDDIR)
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@rm -rf $(BINDIR)/*.o \
-	$(LIBDIR)/*
-	
-server: $ main.o filehandler.o request_builder.o server.o
-	$(CC) $(CFLAGS) $(LIBDIR)/server.o $(LIBDIR)/request_builder.o $(LIBDIR)/filehandler.o $(LIBDIR)/main.o -o $(BINDIR)/$@ -pthread
-	
+	@echo " Cleaning..."; 
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-	
-distrib: clean
-	tar -cvf $(SYSTEM)-$(PROJECT).tar $(SRCDIR)/* Makefile
+# Tests
+#tester:
 
-main.o: $(SRCDIR)/main.cpp 
-	$(CC) $(CFLAGS) -c $(SRCDIR)/$(basename $@).cpp -o $(LIBDIR)/$(basename $@).o
+# Spikes
+#ticket:
 
-filehandler.o: $(SRCDIR)/filehandler.cpp 
-	$(CC) $(CFLAGS) -c $(SRCDIR)/$(basename $@).cpp -o $(LIBDIR)/$(basename $@).o
-	
-request_builder.o: $(SRCDIR)/request_builder.cpp 
-	$(CC) $(CFLAGS) -c $(SRCDIR)/$(basename $@).cpp -o $(LIBDIR)/$(basename $@).o
-
-server.o: $(SRCDIR)/server.cpp 
-	$(CC) $(CFLAGS) -c $(SRCDIR)/$(basename $@).cpp -o $(LIBDIR)/$(basename $@).o
-	
-
+.PHONY: clean
