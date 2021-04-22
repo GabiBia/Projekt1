@@ -3,11 +3,12 @@ Celem projektu było stworzenie programu w języku C++, który będzie składać
 
 ## Informacje ogólne
 Na potrzeby projektu stworzyliśmy serwer webowy, który akceptuje klientów za pomocą wątku, następnie przyjmuje wiadomość w postaci requestu webowego i odsyła odpowiednie dane.  
-Projekt został podzielony na cztery katalogi: 
+Projekt został podzielony na pięć katalogów: 
 * bin (serwer oraz  przykładowa strona), 
 * include (pliki .h), 
 * build (pliki .o),
 * src (pliki .cpp).
+* test 
 
 **Najważniejsze wykorzystane funkcje systemowe:**
 * socket() - tworzenie gniazda komunikacyjnego
