@@ -6,7 +6,7 @@ Na potrzeby projektu stworzyliśmy serwer webowy, który akceptuje klientów za 
 Projekt został podzielony na cztery katalogi: 
 * bin (serwer oraz  przykładowa strona), 
 * include (pliki .h), 
-* lib (pliki .o),
+* build (pliki .o),
 * src (pliki .cpp).
 
 **Najważniejsze wykorzystane funkcje systemowe:**
