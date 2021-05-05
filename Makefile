@@ -15,22 +15,26 @@ CFLAGS := -g # -Wall
 LIB := -pthread
 INC := -I include
 
-$(TARGET): $(OBJECTS)
-	@echo " Linking..."
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
-
+ifneq ("$(wildcard $(TARGET))","")
+out_message:
+	@echo " Already compiled - running";
+	./$(TARGET)
+else
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+	./$(TARGET)
+endif
 
 clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-# Tests
-#tester:
+		
+.PHONY: clean 
+.PRECIOUS: $(TARGET) out_message
 
-# Spikes
-#ticket:
-
-.PHONY: clean
